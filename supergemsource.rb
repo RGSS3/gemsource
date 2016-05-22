@@ -40,24 +40,28 @@ def sanitize(a)
   a.gsub(/<[^>]*?>/, "").gsub("&#39", "'")
 end
 
+def pputs(a)
+   puts "\e[1;31m* #{a}\e[0m"
+end
+
 def tryadd(a)
-     puts "* try adding #{a}"
+     pputs "try adding #{a}"
      system "gem source -a #{a}"
 end
 
 if work?
-  puts "it seemed that it already works"
+  pputs "it seemed that it already works"
 else
-  puts "reset source list"
+  pputs "reset source list"
   clear
-  puts "repairing"
+  pputs "repairing"
   u = get("http://www.baidu.com/s?wd=ruby%20%E6%BA%90")
   sanitize(u).scan(/http:\/\/[^'" ]*/).each{|x|
     next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/]
     tryadd x
     if work?
-       puts "problem solved"
-       puts "#{x} is the source for you"
+       pputs "problem solved"
+       pputs "#{x} is the source for you"
        exit!
    end
   }
