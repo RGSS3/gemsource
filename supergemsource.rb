@@ -49,20 +49,25 @@ def tryadd(a)
      system "gem source -a #{a}"
 end
 
-if work?
+if work? && !ARGV.include?("--force")
   pputs "it seemed that it already works"
 else
   pputs "reset source list"
   clear
   pputs "repairing"
   u = get("http://www.baidu.com/s?wd=ruby%20%E6%BA%90")
+  visit = {}
   sanitize(u).scan(/http:\/\/[^'" ]*/).each{|x|
-    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/]
+    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/] || !x[/ruby/]
+    next if visit[x]
+    visit[x] = 1
     tryadd x
     if work?
        pputs "problem solved"
        pputs "#{x} is the source for you"
        exit!
+   else
+       remove x
    end
   }
  puts "problem unsolved"
