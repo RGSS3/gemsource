@@ -5,3 +5,14 @@ automatically looking and checking for gem source(especially for those behind GF
 ```shell
 ruby -ropen-uri -e"puts open('http://codepad.org/PWehhScc/raw.rb', &:read)" | ruby
 ```
+
+now it also sets bundler's mirror
+so you can type(including windows) without interrupting:
+```shell
+ruby -ropen-uri -e"puts open('http://codepad.org/PWehhScc/raw.rb', &:read)" | ruby
+gem install rails
+rails new app
+cd app
+rails s
+```
+
