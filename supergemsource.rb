@@ -72,7 +72,7 @@ else
   u = get("http://www.baidu.com/s?wd=ruby%20%E5%9B%BD%E5%86%85%E6%BA%90")
   visit = {}
   sanitize(u).scan(/https?:\/\/[^'" ]*/).each{|x|
-    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/] || (!x[/ruby/] && !x[/gem/]) || x[/[&?]/]
+    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/] || (!x[/ruby/] && !x[/gem/]) || x[/[&?^><|]/]
     next if visit[x]
     visit[x] = 1
     tryadd (y=x.sub(/http[s]?/, "http"))
