@@ -77,6 +77,8 @@ else
     visit[x] = 1
     tryadd (y=x.sub(/http[s]?/, "http"))
     if work?
+       pputs "setting BUNDLER global mirror"
+       system "bundler config --global mirror.https://rubygems.org " + y
        pputs "problem solved"
        pputs "#{y} is the source for you"
        exit!
@@ -85,6 +87,8 @@ else
    end
     tryadd (y=x.sub(/http[s]?/, "https"))
     if work?
+       pputs "setting BUNDLER global mirror"
+       system "bundler config --global mirror.https://rubygems.org " + y
        pputs "problem solved"
        pputs "#{y} is the source for you"
        exit!
