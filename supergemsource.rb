@@ -63,7 +63,7 @@ end
 
 
 
-if work? && !ARGV.include?("--force")
+if work? && (!ARGV.include?("--force") && !ENV.include?("FORCE_SOURCE"))
   pputs "it seemed that it already works"
 else
   pputs "reset source list"
