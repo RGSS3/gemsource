@@ -13,10 +13,14 @@ def clear
   }    
 end
 
+
+
 def work?
-  r = `gem list -r y`
-  r.strip != '' 
+  r = `gem spec -r rails 2>&1`
+  !r[/No gem/] 
 end
+
+
 
 def gethttps(uri)
   url = URI(uri)
@@ -28,6 +32,8 @@ def gethttps(uri)
    response.body
 end
 
+
+
 def get(uri)
   url = URI(uri)
    http = Net::HTTP.new(url.host, url.port)
@@ -36,18 +42,26 @@ def get(uri)
    response.body
 end
 
+
+
 def sanitize(a)
   a.gsub(/<[^>]*?>/, "").gsub("&#39", "'")
 end
+
+
 
 def pputs(a)
    puts "\e[1;31m* #{a}\e[0m"
 end
 
+
+
 def tryadd(a)
      pputs "try adding #{a}"
      system "gem source -a #{a}"
 end
+
+
 
 if work? && !ARGV.include?("--force")
   pputs "it seemed that it already works"
@@ -55,21 +69,29 @@ else
   pputs "reset source list"
   clear
   pputs "repairing"
-  u = get("http://www.baidu.com/s?wd=ruby%20%E6%BA%90")
+  u = get("http://www.baidu.com/s?wd=ruby%20%E5%9B%BD%E5%86%85%E6%BA%90")
   visit = {}
-  sanitize(u).scan(/http:\/\/[^'" ]*/).each{|x|
-    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/] || !x[/ruby/]
+  sanitize(u).scan(/https?:\/\/[^'" ]*/).each{|x|
+    next if x[/baidu/] || x[/bdstatic\.com/] || x[/bdimg\.com/] || (!x[/ruby/] && !x[/gem/]) || x[/[&?]/]
     next if visit[x]
     visit[x] = 1
-    tryadd x
+    tryadd (y=x.sub(/http[s]?/, "http"))
     if work?
        pputs "problem solved"
-       pputs "#{x} is the source for you"
+       pputs "#{y} is the source for you"
        exit!
    else
-       remove x
+       remove y
    end
+    tryadd (y=x.sub(/http[s]?/, "https"))
+    if work?
+       pputs "problem solved"
+       pputs "#{y} is the source for you"
+       exit!
+   else
+       remove y
+   end
+
   }
  puts "problem unsolved"
-
 end
